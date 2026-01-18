@@ -1201,7 +1201,7 @@ const Game = () => {
                   <button 
                     onClick={async () => {
                       const text = `I just scored ${gameStat.totalScore} points in Base Defense built by @solodanETH on the @BASE! Can you beat my score?`;
-                      const url = "base-solodan.vercel.app";
+                      const url = "base-solodan-pro.vercel.app";
                       const encodedText = encodeURIComponent(text);
                       const encodedUrl = encodeURIComponent(url);
                       const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
