@@ -1,0 +1,40 @@
+{
+  "miniapp": {
+    "version": "1",
+    "name": "Base Defense",
+    "homeUrl": "https://base-solodan.vercel.app/",
+    "description": "Shoot em all in this exciting game on the  Base!",
+    "subtitle": "Be the best.",
+    "primaryCategory": "games",
+    "tags": [
+      "game",
+      "shooter",
+      "base",
+      "testnet"
+    ],
+    "buttonTitle": "Play!",
+    "splashImageUrl": "https://base-solodan.vercel.app/android-chrome-512x512.png",
+    "splashBackgroundColor": "#4A98EB",
+    "heroImageUrl": "https://base-solodan.vercel.app/bg.jpg",
+    "iconUrl": "https://base-solodan.vercel.app/android-chrome-512x512.png",
+    "imageUrl": "https://base-solodan.vercel.app/logo_2.jpg",
+    "ogTitle": "Base Defense",
+    "ogDescription": "Shoot em all in this exciting game on the Base!",
+    "ogImageUrl": "https://base-solodan.vercel.app/bg.jpg",
+    "button": {
+      "title": "Play!",
+      "action": {
+        "type": "launch_frame",
+        "name": "Base Defense",
+        "url": "https://base-solodan.vercel.app/",
+        "splashImageUrl": "https://base-solodan.vercel.app/splash-image.png",
+        "splashBackgroundColor": "#4A98EB"
+      }
+    }
+  },
+  "accountAssociation": {
+    "header": "eyJmaWQiOjIzMzMxMzAsInR5cGUiOiJhdXRoIiwia2V5IjoiMHgwY2M4Y0FmNWI4MjI3NkFlN2ZiRDg4MGQ4N0RBOWI3MERhMjRhMjVmIn0",
+    "payload": "eyJkb21haW4iOiJiYXNlLXNvbG9kYW4udmVyY2VsLmFwcCJ9",
+    "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEFy01hYdC_A-5SDGI3cd9--1_LPwavzbi7vM9cAu4z6yCJvlkmMuCu2KHqUFHNa9p1TiuRAqMTRKD-l4yWzUXtWHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+  }
+}
