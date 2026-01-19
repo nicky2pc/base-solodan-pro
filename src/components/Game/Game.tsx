@@ -1195,13 +1195,11 @@ const Game = () => {
           )}
         </h1>
           <LoginBtn />
-
-          <button 
-            className="leaderboard-button" 
-            onClick={() => setIsLeaderboardOpen(true)}
-          >
-            Leaderboard
-          </button>
+          <LeaderboardPopup 
+            isOpen={isLeaderboardOpen} 
+            onClose={() => setIsLeaderboardOpen(false)} 
+          />
+          
                 
                 <div className="fullscreen-btn-wrapper">
             
