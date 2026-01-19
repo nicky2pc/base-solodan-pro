@@ -1173,11 +1173,11 @@ const Game = () => {
           {isConnected && gameStat.totalScore < 20 && (
             <span style={{
               display: 'block',
-              fontSize: '20px',
+              fontSize: '24px',
               marginTop: '12px',
-              color: '#ef4444',
+              color: '#c4befa',
               fontWeight: '600',
-              textShadow: '0 0 16px rgba(239, 68, 68, 0.6)'
+              textShadow: '0 0 16px rgba(210, 211, 221, 0.6)'
             }}>
               Need 20+ points to mint NFT
             </span>
