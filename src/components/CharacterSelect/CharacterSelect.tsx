@@ -92,7 +92,7 @@ export const CharacterSelect: React.FC<CharacterSelectProps> = ({
             <h3>Basic Jesse</h3>
             <div className="stats">
               <p> ▸ Fire Rate: 300ms</p>
-              <p> ▸ Speed: 1.4</p>
+              <p> ▸ Speed: 1.7</p>
               <p> ▸ Damage: 1</p>
               <p> ▸ Health: 3</p>
             </div>

@@ -512,7 +512,7 @@ const Game = () => {
     tank.maxHealth = isPremium ? 7 : 3;
     
     // Скорость движения: Basic 70%, Premium 130%
-    tank.speed = CONFIG.PLAYER_SPEED * (isPremium ? 1.3 : 0.7);
+    tank.speed = CONFIG.PLAYER_SPEED * (isPremium ? 1.3 : 0.9);
     
     return tank;
   };
