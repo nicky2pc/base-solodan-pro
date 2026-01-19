@@ -5,9 +5,10 @@ import { MintButton } from "./MintButton";
 interface MintPopupProps {
   open: boolean;
   onClose: () => void;
+  currentScore: number; // 👈 Новый проп
 }
 
-const MintPopup: React.FC<MintPopupProps> = ({ open, onClose }) => {
+const MintPopup: React.FC<MintPopupProps> = ({ open, onClose, currentScore }) => {
   const [mintStatus, setMintStatus] = useState<string>('');
   const [mintError, setMintError] = useState<string>('');
   const [hash, setHash] = useState<string | null>(null);
@@ -56,8 +57,8 @@ const MintPopup: React.FC<MintPopupProps> = ({ open, onClose }) => {
         <div className="mint-popup-content">
           <img src="/token.jpg" alt="Token" width={300} height={300} className="token-image" />
           <div className="mint-text">
-            <h2>Mint Your Token</h2>
-            <p>Get your exclusive game token now!</p>
+            <h2>Mint Your Victory NFT</h2>
+            <p>Score: {currentScore} points 🏆</p>
             {mintStatus === 'success' && <p className="success-message">Token minted successfully!</p>}
             {mintError && <p className="error-message">{mintError}</p>}
           </div>
@@ -65,6 +66,7 @@ const MintPopup: React.FC<MintPopupProps> = ({ open, onClose }) => {
           {open && (
             <MintButton 
               key={buttonKey}
+              currentScore={currentScore} // 👈 Передаем скор
               onSuccess={handleMintSuccess}
               onError={handleMintError}
             />

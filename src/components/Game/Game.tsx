@@ -582,7 +582,7 @@ const Game = () => {
   const handleStopGame = async () => {
     const totalScore = totalScoreRef.current;
     setGameState("gameover");
-    if (totalScore > 1 && isConnected) {
+    if (totalScore >= 20 && isConnected) {
       openMintPopup();
     }
   }
@@ -775,7 +775,7 @@ const Game = () => {
   
               setTimeout(() => {
                 setGameState('gameover');
-                if (totalScore > 1 && isConnected) {
+                if (totalScore >= 20 && isConnected) {
                   openMintPopup();
                 }
               }, 1000);
@@ -1265,7 +1265,11 @@ const Game = () => {
         onCharacterSelect={handleCharacterSelect}
       />
     </div>
-      <MintPopup open={open} onClose={closeMintPopup} />
+    <MintPopup 
+      open={open} 
+      onClose={closeMintPopup} 
+      currentScore={gameStat.totalScore}
+    />
 </>
   );
 };

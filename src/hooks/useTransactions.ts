@@ -39,7 +39,7 @@ interface TransactionsHookReturn {
   handleTotalScore: (score: number, isDead?: boolean, username?: string) => void;
   clearTransactions: () => void;
   updateTransactions: (transaction: Transaction, callback: UpdateTransactionCallback) => void;
-  handleWagmiMint: () => Promise<{
+  handleWagmiMint: (currentScore: number) => Promise<{  // 👈 Добавлен параметр
     status: string;
     url?: string;
     error: string;
@@ -155,7 +155,15 @@ export const useTransactions = (): TransactionsHookReturn => {
   };
 
 
-  const handleWagmiMint = async () => {
+  const handleWagmiMint = async (currentScore: number) => {
+    // Проверка минимального скора
+    if (currentScore < 20) {
+      return {
+        status: 'error',
+        error: `Need 20+ points to mint (current: ${currentScore})`
+      };
+    }
+  
     const transaction: Transaction = {
       id: Date.now(),
       type: `Mint`,
@@ -164,28 +172,25 @@ export const useTransactions = (): TransactionsHookReturn => {
       error: "",
       userAddress: address || ""
     };
-
-    // Add transaction immediately with pending status
+  
     const updated = [transaction, ...globalTransactions];
     if (updated.length > CONFIG.MAX_TRANSACTIONS) {
       updated.length = CONFIG.MAX_TRANSACTIONS;
     }
     updateGlobalTransactions(updated);
-
+  
     try {
-      const tokenURI = "ipfs://bafkreigyp53t6rwzyi2iczndj7yr5h6jo3wiyvn5gtwte434qjbfwydlrm";
-    
       const { request } = await simulateContract(config, {
-        address: "0x2A4cAF0e6e2D256854cb159EAc574428f5a1509D" as `0x${string}`, 
+        address: "0x184F7c859212054fC569B13D163BddDb9C08adEb" as `0x${string}`, // 👈 ЗАМЕНИТЬ ПОСЛЕ ДЕПЛОЯ
         abi: MINT_CONTRACT_ABI,
         functionName: 'mint',
-        args: [address, tokenURI], // 👈 Теперь просто адрес + URI
+        args: [address], // Только адрес получателя
         chainId: 8453,
+        value: BigInt('100000000000000') // 0.0001 ETH
       });
       
       const txHash = await writeContract(request);
-
-      // Update transaction with hash immediately
+  
       const updatedWithHash = globalTransactions.map(tx =>
         tx.id === transaction.id ? {
           ...tx,
@@ -193,14 +198,13 @@ export const useTransactions = (): TransactionsHookReturn => {
         } : tx
       );
       updateGlobalTransactions(updatedWithHash);
-
+  
       return {
         status: 'pending',
         url: `https://basescan.org/tx/${txHash}`,
         error: ''
       };
     } catch (error) {
-      // Update transaction with error
       const updatedWithError = globalTransactions.map(tx =>
         tx.id === transaction.id ? {
           ...tx,
@@ -209,7 +213,7 @@ export const useTransactions = (): TransactionsHookReturn => {
         } : tx
       );
       updateGlobalTransactions(updatedWithError);
-
+  
       return {
         status: 'error',
         error: error instanceof Error ? error.message : "Transaction failed"

@@ -12,15 +12,13 @@ import { sdk } from '@farcaster/miniapp-sdk';
 interface MintButtonProps {
   onSuccess: () => void;
   onError: (message: string) => void;
+  currentScore: number; // 👈 Новый проп
 }
 
-// Helper function to detect user rejection errors
 function isUserRejectionError(error: any): boolean {
   if (!error) return false;
-
   const errorMessage = error.message || error.toString();
   const errorMessageLower = errorMessage.toLowerCase();
-
   return (
     errorMessageLower.includes('user rejected') ||
     errorMessageLower.includes('user denied') ||
@@ -34,7 +32,7 @@ function isUserRejectionError(error: any): boolean {
   );
 }
 
-export function MintButton({ onSuccess, onError }: MintButtonProps) {
+export function MintButton({ onSuccess, onError, currentScore }: MintButtonProps) {
   const { isConnected, address, chainId } = useAccount();
   const { switchChain } = useSwitchChain();
   const { connect } = useConnect();
@@ -43,6 +41,7 @@ export function MintButton({ onSuccess, onError }: MintButtonProps) {
   const [userRejected, setUserRejected] = useState(false);
   const [chainMismatch, setChainMismatch] = useState(false);
   const [wasMinted, setWasMinted] = useState(false);
+  const [scoreError, setScoreError] = useState<string | null>(null);
 
   const {
     handleWagmiMint,
@@ -54,33 +53,29 @@ export function MintButton({ onSuccess, onError }: MintButtonProps) {
     waitError,
   } = useTransactions();
   
-  const MINT_CONTRACT_ADDRESS = "0x2De241B84F9062925c532735AB56857ad402c209";
+  const MINT_CONTRACT_ADDRESS = "0x184F7c859212054fC569B13D163BddDb9C08adEb";
+  const MIN_SCORE_REQUIRED = 20;
 
   const isPending = isLoadingTxData || isWritePending || isConfirming;
   const successHandled = useRef(false);
-
   const targetChainId = base.id;
 
-  // Reset wasMinted when wallet disconnects
   useEffect(() => {
     if (!isConnected) {
       setWasMinted(false);
     }
   }, [isConnected]);
 
-  // Reset rejection / mismatch flags
   useEffect(() => {
     if ((userRejected || chainMismatch) && !isPending) {
       const timer = setTimeout(() => {
         setUserRejected(false);
         setChainMismatch(false);
       }, 3000);
-
       return () => clearTimeout(timer);
     }
   }, [userRejected, chainMismatch, isPending]);
 
-  // Success handler
   useEffect(() => {
     if (isConfirmed && !successHandled.current) {
       successHandled.current = true;
@@ -89,11 +84,9 @@ export function MintButton({ onSuccess, onError }: MintButtonProps) {
     }
   }, [isConfirmed, onSuccess]);
 
-  // Error handling
   useEffect(() => {
     if (writeError || waitError) {
       const error = writeError || waitError;
-
       if (isUserRejectionError(error)) {
         setUserRejected(true);
       } else if (
@@ -107,20 +100,27 @@ export function MintButton({ onSuccess, onError }: MintButtonProps) {
     }
   }, [writeError, waitError, onError]);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       setIsLoadingTxData(false);
       setUserRejected(false);
       setWasMinted(false);
       setChainMismatch(false);
+      setScoreError(null);
       successHandled.current = false;
     };
   }, []);
 
   const handleMint = async () => {
     try {
+      // Проверка скора
+      if (currentScore < MIN_SCORE_REQUIRED) {
+        setScoreError(`Need ${MIN_SCORE_REQUIRED}+ points to mint (current: ${currentScore})`);
+        return;
+      }
+
       setIsLoadingTxData(true);
+      setScoreError(null);
       successHandled.current = false;
       setUserRejected(false);
       setChainMismatch(false);
@@ -130,7 +130,6 @@ export function MintButton({ onSuccess, onError }: MintButtonProps) {
         return;
       }
 
-      // Ensure Base Mainnet
       try {
         switchChain({ chainId: targetChainId });
       } catch (error) {
@@ -141,7 +140,14 @@ export function MintButton({ onSuccess, onError }: MintButtonProps) {
         }
       }
 
-      await handleWagmiMint();
+      const result = await handleWagmiMint(currentScore);
+      
+      if (result.status === 'error') {
+        setScoreError(result.error);
+        setIsLoadingTxData(false);
+        return;
+      }
+      
       setWasMinted(true);
     } catch (error) {
       if (isUserRejectionError(error)) {
@@ -168,33 +174,50 @@ export function MintButton({ onSuccess, onError }: MintButtonProps) {
   };
 
   return (
-    <button
-      className={`mint-button ${isPending ? 'disabled' : ''} ${
-        userRejected ? 'rejected' : ''
-      } ${chainMismatch ? 'chain-error' : ''}`}
-      onClick={
-        writeHash && wasMinted && isConnected
-          ? () =>
-              sdk.actions.openUrl(
-                `https://basescan.org/tx/${writeHash}`
-              )
-          : handleMint
-      }
-      disabled={isPending}
-    >
-      {!isConnected
-        ? 'Connect Wallet'
-        : chainId !== targetChainId
-        ? 'Switch Network'
-        : isPending
-        ? 'Processing...'
-        : userRejected
-        ? 'Transaction Canceled'
-        : chainMismatch
-        ? 'Network Mismatch'
-        : writeHash && wasMinted
-        ? 'View Transaction'
-        : 'Mint Now'}
-    </button>
+    <>
+      {scoreError && (
+        <p style={{ 
+          color: '#ef4444', 
+          fontWeight: 600, 
+          marginBottom: '12px',
+          textAlign: 'center' 
+        }}>
+          {scoreError}
+        </p>
+      )}
+      
+      <button
+        className={`mint-button ${isPending ? 'disabled' : ''} ${
+          userRejected ? 'rejected' : ''
+        } ${chainMismatch ? 'chain-error' : ''} ${
+          currentScore < MIN_SCORE_REQUIRED ? 'disabled' : ''
+        }`}
+        onClick={
+          writeHash && wasMinted && isConnected
+            ? () =>
+                sdk.actions.openUrl(
+                  `https://basescan.org/tx/${writeHash}`
+                )
+            : handleMint
+        }
+        disabled={isPending || currentScore < MIN_SCORE_REQUIRED}
+      >
+        {!isConnected
+          ? 'Connect Wallet'
+          : chainId !== targetChainId
+          ? 'Switch Network'
+          : currentScore < MIN_SCORE_REQUIRED
+          ? `Need ${MIN_SCORE_REQUIRED}+ points to mint`
+          : isPending
+          ? 'Processing...'
+          : userRejected
+          ? 'Transaction Canceled'
+          : chainMismatch
+          ? 'Network Mismatch'
+          : writeHash && wasMinted
+          ? 'View Transaction'
+          : 'Mint for 0.0001 ETH'}
+      </button>
+    </>
   );
 }
