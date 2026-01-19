@@ -1173,9 +1173,9 @@ const Game = () => {
           {isConnected && gameStat.totalScore < 20 && (
             <span style={{
               display: 'block',
-              fontSize: '24px',
+              fontSize: '22px',
               marginTop: '12px',
-              color: '#c4befa',
+              color: '#e8e6fc',
               fontWeight: '600',
               textShadow: '0 0 16px rgba(210, 211, 221, 0.6)'
             }}>
