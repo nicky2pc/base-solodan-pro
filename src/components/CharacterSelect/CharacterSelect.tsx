@@ -91,9 +91,10 @@ export const CharacterSelect: React.FC<CharacterSelectProps> = ({
             <img src="/chars/15.svg" alt="Basic Jesse" />
             <h3>Basic Jesse</h3>
             <div className="stats">
-              <p>🔫 Fire Rate: 200ms</p>
-              <p>💨 Speed: 2.0</p>
+              <p> ▸ Fire Rate: 300ms</p>
+              <p> ▸ Speed: 1.4</p>
               <p>💥 Damage: 1</p>
+              <p>❤️ Health: 3</p>
             </div>
             <span className="price">FREE</span>
           </div>
@@ -107,10 +108,10 @@ export const CharacterSelect: React.FC<CharacterSelectProps> = ({
             <img src="/chars/premium.svg" alt="Premium Jesse" />
             <h3>Premium Jesse ⭐</h3>
             <div className="stats">
-              <p>🔫 Fire Rate: 120ms</p>
-              <p>💨 Speed: 2.5</p>
-              <p>💥 Damage: 2</p>
-              <p>❤️ +2 HP</p>
+              <p> ▸ Fire Rate: 100ms</p>
+              <p> ▸ Speed: 2.6</p>
+              <p>💥 Damage: 1</p>
+              <p>❤️ Health: 7</p>
             </div>
             
             {!hasPremium ? (

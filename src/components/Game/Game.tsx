@@ -494,16 +494,27 @@ const Game = () => {
   const createPlayerTank = (characterType: 'basic' | 'premium') => {
     const isPremium = characterType === 'premium';
     
-    return new Mondalak(
+    const tank = new Mondalak(
       canvasRef.current!.width / 2,
       canvasRef.current!.width / 2,
       true,
-      CONFIG.BULLET_SPEED * (isPremium ? 1.3 : 1), // Быстрее пули
-      isPremium ? 120 : CONFIG.FIRE_RATE, // Быстрее стрельба
+      // Скорость пуль: Basic 80% от нормы, Premium 150%
+      CONFIG.BULLET_SPEED * (isPremium ? 1.5 : 0.8),
+      // Fire rate: Basic медленнее (300ms), Premium быстрее (100ms)
+      isPremium ? 100 : 300,
       "#0000f5",
       "main",
-      imageCacheRef.current.player[isPremium ? 1 : 0] // Разные спрайты
+      imageCacheRef.current.player[isPremium ? 1 : 0]
     );
+    
+    // HP: Basic 3, Premium 7
+    tank.health = isPremium ? 7 : 3;
+    tank.maxHealth = isPremium ? 7 : 3;
+    
+    // Скорость движения: Basic 70%, Premium 130%
+    tank.speed = CONFIG.PLAYER_SPEED * (isPremium ? 1.3 : 0.7);
+    
+    return tank;
   };
 
   const resetGameObjects = () => {
@@ -1222,7 +1233,7 @@ const Game = () => {
                   <button 
                     onClick={async () => {
                       const text = `I just scored ${gameStat.totalScore} points in Base Defense built by @solodanETH on the @BASE! Can you beat my score?`;
-                      const url = "base-solodan-pro.vercel.app";
+                      const url = "https://base.app/app/base-solodan-pro.vercel.app";
                       const encodedText = encodeURIComponent(text);
                       const encodedUrl = encodeURIComponent(url);
                       const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
@@ -1232,6 +1243,45 @@ const Game = () => {
                     style={{ marginLeft: '10px', width: '310px', backgroundColor: '#000000', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}
                   >
                     Share results on <img src="/x.jpg" alt="X logo" style={{ height: '20px', width: 'auto' }} />
+                  </button>
+                  <button 
+                    onClick={async () => {
+                      const text = `I just scored ${gameStat.totalScore} points in Jesse Defense! 🎮\n\nCan you beat my score?`;
+                      const url = "https://base.app/app/base-solodan-pro.vercel.app";
+                      
+                      // Формат для Warpcast composer
+                      const warpcastUrl = `https://base.app/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(url)}`;
+                      
+                      await sdk.actions.openUrl(warpcastUrl);
+                    }}
+                    style={{ 
+                      marginTop: '10px',
+                      width: '310px', 
+                      background: 'linear-gradient(135deg, #0052FF, #0066FF)', 
+                      color: 'white', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      gap: '8px',
+                      border: 'none',
+                      padding: '12px 18px',
+                      borderRadius: '32px',
+                      fontSize: '1.1em',
+                      fontWeight: '700',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      boxShadow: '0 3px 10px rgba(0, 82, 255, 0.3)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 6px 16px rgba(0, 82, 255, 0.4)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 3px 10px rgba(0, 82, 255, 0.3)';
+                    }}
+                  >
+                    Share on <img src="/base-logo.svg" alt="Base" style={{ height: '20px' }} />
                   </button>
 
               </div>
