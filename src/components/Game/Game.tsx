@@ -593,7 +593,7 @@ const Game = () => {
   const handleStopGame = async () => {
     const totalScore = totalScoreRef.current;
     setGameState("gameover");
-    if (totalScore >= 20 && isConnected) {
+    if (totalScore >= 5 && isConnected) {
       openMintPopup();
     }
   }
@@ -786,7 +786,7 @@ const Game = () => {
   
               setTimeout(() => {
                 setGameState('gameover');
-                if (totalScore >= 20 && isConnected) {
+                if (totalScore >= 5 && isConnected) {
                   openMintPopup();
                 }
               }, 1000);
@@ -1181,7 +1181,7 @@ const Game = () => {
             <div className="bg">
               <h1 className='total-score h1'>
           Your total score: {gameStat.totalScore}
-          {isConnected && gameStat.totalScore < 20 && (
+          {isConnected && gameStat.totalScore < 5 && (
             <span style={{
               display: 'block',
               fontSize: '20px',
@@ -1190,7 +1190,7 @@ const Game = () => {
               fontWeight: '600',
               textShadow: '0 0 16px rgba(210, 211, 221, 0.6)'
             }}>
-              Need 20+ points to mint NFT
+              Need 5+ points to mint NFT
             </span>
           )}
         </h1>

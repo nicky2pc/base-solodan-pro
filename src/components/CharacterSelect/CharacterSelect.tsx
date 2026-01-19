@@ -93,8 +93,8 @@ export const CharacterSelect: React.FC<CharacterSelectProps> = ({
             <div className="stats">
               <p> ▸ Fire Rate: 300ms</p>
               <p> ▸ Speed: 1.4</p>
-              <p>💥 Damage: 1</p>
-              <p>❤️ Health: 3</p>
+              <p> ▸ Damage: 1</p>
+              <p> ▸ Health: 3</p>
             </div>
             <span className="price">FREE</span>
           </div>
@@ -110,8 +110,8 @@ export const CharacterSelect: React.FC<CharacterSelectProps> = ({
             <div className="stats">
               <p> ▸ Fire Rate: 100ms</p>
               <p> ▸ Speed: 2.6</p>
-              <p>💥 Damage: 1</p>
-              <p>❤️ Health: 7</p>
+              <p> ▸ Damage: 1</p>
+              <p> ▸ Health: 7</p>
             </div>
             
             {!hasPremium ? (
