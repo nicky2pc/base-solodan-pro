@@ -1184,7 +1184,7 @@ const Game = () => {
           {isConnected && gameStat.totalScore < 20 && (
             <span style={{
               display: 'block',
-              fontSize: '22px',
+              fontSize: '20px',
               marginTop: '12px',
               color: '#e8e6fc',
               fontWeight: '600',
@@ -1195,6 +1195,9 @@ const Game = () => {
           )}
         </h1>
           <LoginBtn />
+          <button className="leaderboard-button" onClick={() => setIsLeaderboardOpen(true)}>
+            Leaderboard
+          </button>
           <LeaderboardPopup 
             isOpen={isLeaderboardOpen} 
             onClose={() => setIsLeaderboardOpen(false)} 
