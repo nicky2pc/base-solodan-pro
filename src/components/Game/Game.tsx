@@ -556,6 +556,11 @@ const Game = () => {
     }
   };
 
+  const getShareText = () => {
+    const characterName = selectedCharacter === 'premium' ? '@brian_armstrong' : '@jessepollak';
+    return `I just scored ${gameStat.totalScore} points playing as ${characterName} in Base Defense on @base! Can you beat my score?`;
+  };
+
   const handleStartGame = () => {
     setShowCharSelect(true);
   };
@@ -1233,7 +1238,7 @@ const Game = () => {
               
                   <button 
                     onClick={async () => {
-                      const text = `I just scored ${gameStat.totalScore} points in Base Defense built by @solodanETH on the @BASE! Can you beat my score?`;
+                      const text = getShareText();
                       const url = "https://base.app/app/base-solodan-pro.vercel.app";
                       const encodedText = encodeURIComponent(text);
                       const encodedUrl = encodeURIComponent(url);
@@ -1247,7 +1252,7 @@ const Game = () => {
                   </button>
                   <button
                     onClick={async () => {
-                      const text = `I just scored ${gameStat.totalScore} points in Jesse Defense! 🎮\n\nCan you beat my score?`;
+                      const text = getShareText();
                       const url = "https://base-solodan-pro.vercel.app";
 
                       try {
