@@ -1248,7 +1248,7 @@ const Game = () => {
                   <button
                     onClick={async () => {
                       const text = `I just scored ${gameStat.totalScore} points in Jesse Defense! 🎮\n\nCan you beat my score?`;
-                      const url = "https://base.app/app/base-solodan-pro.vercel.app";
+                      const url = "https://base-solodan-pro.vercel.app";
 
                       try {
                         await sdk.actions.composeCast({
