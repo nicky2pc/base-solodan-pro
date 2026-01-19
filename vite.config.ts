@@ -16,7 +16,7 @@ function fcFrameMeta(): Plugin {
           title: 'Play!',
           action: {
             type: 'launch_frame',
-            name: 'Base defanse',
+            name: 'Base defense',
             url: `https://base-solodan-pro.vercel.app`, 
             splashImageUrl: 'https://base-solodan-pro.vercel.app/logo_2.jpg',
             splashBackgroundColor: '#4A98EB',
