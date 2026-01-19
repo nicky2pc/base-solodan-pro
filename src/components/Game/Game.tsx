@@ -1245,44 +1245,48 @@ const Game = () => {
                   >
                     Share results on <img src="/x.jpg" alt="X logo" style={{ height: '20px', width: 'auto' }} />
                   </button>
-                  <button 
+                  <button
                     onClick={async () => {
                       const text = `I just scored ${gameStat.totalScore} points in Jesse Defense! 🎮\n\nCan you beat my score?`;
                       const url = "https://base.app/app/base-solodan-pro.vercel.app";
-                      
-                      // Формат для Warpcast composer
-                      const warpcastUrl = `https://base.app/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(url)}`;
-                      
-                      await sdk.actions.openUrl(warpcastUrl);
+
+                      try {
+                        await sdk.actions.composeCast({
+                          text: text,
+                          embeds: [url]
+                        });
+                      } catch (error) {
+                        console.error("Compose cast failed:", error);
+                        // можно добавить fallback на warpcast url если очень хочется
+                      }
                     }}
-                    style={{ 
+                    style={{
                       marginTop: '10px',
-                      width: '310px', 
-                      background: 'linear-gradient(135deg, #0052FF, #0066FF)', 
-                      color: 'white', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center', 
+                      width: '310px',
+                      height: '44px',           // ← делаем высоту как у первой кнопки
+                      backgroundColor: '#000000',
+                      color: 'white',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                       gap: '8px',
                       border: 'none',
-                      padding: '12px 18px',
-                      borderRadius: '32px',
-                      fontSize: '1.1em',
-                      fontWeight: '700',
+                      borderRadius: '8px',      // ← был 32px → делаем более похожим на первую
+                      fontSize: '1em',
+                      fontWeight: '600',
                       cursor: 'pointer',
-                      transition: 'all 0.3s ease',
-                      boxShadow: '0 3px 10px rgba(0, 82, 255, 0.3)'
+                      transition: 'all 0.2s ease',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '0 6px 16px rgba(0, 82, 255, 0.4)';
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(255,255,255,0.08)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 3px 10px rgba(0, 82, 255, 0.3)';
+                      e.currentTarget.style.boxShadow = 'none';
                     }}
                   >
-                    Share on <img src="/base-logo.svg" alt="Base" style={{ height: '20px' }} />
+                    Share on Base
                   </button>
 
               </div>
