@@ -1241,7 +1241,7 @@ const Game = () => {
 
                       await sdk.actions.openUrl(twitterUrl);
                     }}
-                    style={{ marginLeft: '10px', width: '310px', backgroundColor: '#000000', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}
+                    style={{ marginLeft: '10px auto 0', width: '310px', backgroundColor: '#000000', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}
                   >
                     Share results on <img src="/x.jpg" alt="X logo" style={{ height: '20px', width: 'auto' }} />
                   </button>
@@ -1286,7 +1286,7 @@ const Game = () => {
                       e.currentTarget.style.boxShadow = 'none';
                     }}
                   >
-                    Share on Base
+                    Share on Base 🟦
                   </button>
 
               </div>
