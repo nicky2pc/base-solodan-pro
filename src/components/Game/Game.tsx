@@ -1168,8 +1168,29 @@ const Game = () => {
         {gameState === 'gameover' && (
           <>
             <div className="bg">
-              <h1 className='total-score h1'>Your total score: {gameStat.totalScore}</h1>
-                <LoginBtn />
+              <h1 className='total-score h1'>
+          Your total score: {gameStat.totalScore}
+          {isConnected && gameStat.totalScore < 20 && (
+            <span style={{
+              display: 'block',
+              fontSize: '20px',
+              marginTop: '12px',
+              color: '#ef4444',
+              fontWeight: '600',
+              textShadow: '0 0 16px rgba(239, 68, 68, 0.6)'
+            }}>
+              Need 20+ points to mint NFT
+            </span>
+          )}
+        </h1>
+          <LoginBtn />
+
+          <button 
+            className="leaderboard-button" 
+            onClick={() => setIsLeaderboardOpen(true)}
+          >
+            Leaderboard
+          </button>
                 
                 <div className="fullscreen-btn-wrapper">
             
