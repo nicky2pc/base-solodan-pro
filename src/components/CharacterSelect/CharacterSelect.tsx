@@ -106,7 +106,7 @@ export const CharacterSelect: React.FC<CharacterSelectProps> = ({
           >
             {!hasPremium && <div className="lock-overlay">🔒</div>}
             <img src="/chars/premium.svg" alt="Premium Jesse" />
-            <h3>Premium Jesse ⭐</h3>
+            <h3>Armstrong ⭐</h3>
             <div className="stats">
               <p> ▸ Fire Rate: 100ms</p>
               <p> ▸ Speed: 2.6</p>
