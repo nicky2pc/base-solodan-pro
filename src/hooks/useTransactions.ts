@@ -157,10 +157,10 @@ export const useTransactions = (): TransactionsHookReturn => {
 
   const handleWagmiMint = async (currentScore: number) => {
     // Проверка минимального скора
-    if (currentScore < 5) {
+    if (currentScore < 1) {
       return {
         status: 'error',
-        error: `Need 5+ points to mint (current: ${currentScore})`
+        error: `Need 1+ points to mint (current: ${currentScore})`
       };
     }
   

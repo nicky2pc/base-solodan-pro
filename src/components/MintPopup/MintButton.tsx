@@ -54,7 +54,7 @@ export function MintButton({ onSuccess, onError, currentScore }: MintButtonProps
   } = useTransactions();
   
   const MINT_CONTRACT_ADDRESS = "0x184F7c859212054fC569B13D163BddDb9C08adEb";
-  const MIN_SCORE_REQUIRED = 5;
+  const MIN_SCORE_REQUIRED = 1;
 
   const isPending = isLoadingTxData || isWritePending || isConfirming;
   const successHandled = useRef(false);
