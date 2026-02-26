@@ -121,6 +121,73 @@ export const loadSounds = async () => {
   return soundLibrary;
 };
 
+const INSUFFICIENT_FUNDS_MSG = "Insufficient ETH, you can <a href='#' class='interactive-link' data-action='logout'>play as a guest</a> or <a href='#' class='interactive-link' data-action='faucet'>use Faucet</a>";
+
+export const parseWeb3ErrorMessage = (error: unknown): string => {
+  if (!(error instanceof Error)) return "Transaction failed. Please try again.";
+
+  const errorText = error.message.toLowerCase();
+  const errorObject = error as any;
+
+  // Ethers-style error codes
+  if (errorObject.code) {
+    switch (errorObject.code) {
+      case "ACTION_REJECTED":
+      case 4001:
+        return "You rejected the transaction.";
+      case "INSUFFICIENT_FUNDS":
+        return INSUFFICIENT_FUNDS_MSG;
+      case "NONCE_EXPIRED":
+        return "Transaction sequence error. Please reload the page.";
+      case "REPLACEMENT_UNDERPRICED":
+        return "Gas price too low. Please try again.";
+      case "TRANSACTION_REPLACED":
+        return "Transaction was replaced. Please try again.";
+      case "UNPREDICTABLE_GAS_LIMIT":
+        return "Unable to estimate gas. Please try again.";
+      case "NETWORK_ERROR":
+      case "SERVER_ERROR":
+        return "Network error. Please check your connection.";
+      case "TIMEOUT":
+        return "Request timed out. Please try again.";
+    }
+  }
+
+  // Insufficient funds — viem wraps this in a long description
+  if (
+    errorText.includes("exceeds the balance") ||
+    errorText.includes("insufficient funds") ||
+    errorText.includes("insufficient balance") ||
+    errorText.includes("signer had insufficient balance")
+  ) {
+    return INSUFFICIENT_FUNDS_MSG;
+  }
+
+  if (errorText.includes("user rejected") || errorText.includes("user denied") || errorText.includes("action_rejected")) {
+    return "You rejected the transaction.";
+  }
+  if (errorText.includes("nonce") || errorText.includes("replacement transaction underpriced") || errorText.includes("already known")) {
+    return "Transaction nonce error. Please reload the page.";
+  }
+  if (errorText.includes("json") || errorText.includes("unexpected end")) {
+    return "Network error. Please reload the page.";
+  }
+  if (errorText.includes("revert") || errorText.includes("missing revert data")) {
+    return "Transaction reverted. Please try again.";
+  }
+  if (errorText.includes("timeout") || errorText.includes("timed out")) {
+    return "Transaction timed out. Network might be slow.";
+  }
+  if (errorText.includes("network") || errorText.includes("connection")) {
+    return "Network connection error. Please check your internet.";
+  }
+  if (errorText.includes("gas") || errorText.includes("fee")) {
+    return "Gas fee error. Network might be congested.";
+  }
+
+  return "Transaction failed. Please try again.";
+};
+
 export const MintWagmi = async (address: string) => {
   try {
     return {
@@ -323,7 +390,7 @@ export const sendTransaction = async (
             } else if (errorText.includes("revert") || errorText.includes("missing revert data")) {
               errorMessage = "Missing revert data.";
             } else {
-              errorMessage = error.message;
+              errorMessage = parseWeb3ErrorMessage(error);
             }
         }
       } else {
@@ -344,7 +411,7 @@ export const sendTransaction = async (
         } else if (errorText.includes("revert") || errorText.includes("missing revert data")) {
           errorMessage = "Missing revert data.";
         } else {
-          errorMessage = error.message;
+          errorMessage = parseWeb3ErrorMessage(error);
         }
       }
     }
@@ -617,7 +684,7 @@ export const mint = async (
             } else if (errorText.includes("revert") || errorText.includes("missing revert data")) {
               errorMessage = "Missing revert data.";
             } else {
-              errorMessage = error.message;
+              errorMessage = parseWeb3ErrorMessage(error);
             }
         }
       } else {
@@ -638,7 +705,7 @@ export const mint = async (
         } else if (errorText.includes("revert") || errorText.includes("missing revert data")) {
           errorMessage = "Missing revert data.";
         } else {
-          errorMessage = error.message;
+          errorMessage = parseWeb3ErrorMessage(error);
         }
       }
     }

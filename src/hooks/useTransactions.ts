@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { CONFIG } from '../game/config.ts';
+import { parseWeb3ErrorMessage } from '../game/utils.ts';
 import { Transaction, UpdateTransactionCallback } from '../types.ts';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { simulateContract, writeContract } from 'wagmi/actions';
@@ -205,18 +206,19 @@ export const useTransactions = (): TransactionsHookReturn => {
         error: ''
       };
     } catch (error) {
+      const errorMessage = parseWeb3ErrorMessage(error);
       const updatedWithError = globalTransactions.map(tx =>
         tx.id === transaction.id ? {
           ...tx,
           link: "",
-          error: error instanceof Error ? error.message : "Transaction failed"
+          error: errorMessage
         } : tx
       );
       updateGlobalTransactions(updatedWithError);
-  
+
       return {
         status: 'error',
-        error: error instanceof Error ? error.message : "Transaction failed"
+        error: errorMessage
       };
     }
   };
