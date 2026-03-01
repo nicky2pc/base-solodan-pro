@@ -539,7 +539,7 @@ export const mint = async (
       const estimatedCost = gasPrice * BigInt(gasLimit);
 
       if (balance < estimatedCost) {
-        return { error: "Insufficient ETH, you can <a href='#' class='interactive-link' data-action='logout'>play as a guest</a> or <a href='#' class='interactive-link' data-action='faucet'>use Faucet</a>" };
+        return { error: "Insufficient ETH, you can use Faucet" };
       }
 
       let nonce: number;
