@@ -41,11 +41,34 @@ html, body {
 }
 
 body {
+  transform-origin: top left;
   overflow-x: hidden;
   position: relative;
   font-family: 'Space Mono', 'Courier New', monospace;
   background: linear-gradient(180deg, var(--base-surface) 0%, var(--base-surface-strong) 100%);
   color: var(--base-ink);
+}
+
+/* Scale based on WIDTH (not height) — width doesn't change when browser toolbar appears/hides */
+@media (max-width: 430px) {
+  body {
+    transform: scale(0.5);
+    width: 200%;
+  }
+}
+
+@media (min-width: 431px) and (max-width: 600px) {
+  body {
+    transform: scale(0.65);
+    width: 154%;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  body {
+    transform: scale(0.8);
+    width: 125%;
+  }
 }
 
 #privy-dialog > div {
