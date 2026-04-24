@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   useAccount,
-  useConnect,
   useSwitchChain,
 } from 'wagmi';
-import { farcasterMiniApp } from "@farcaster/miniapp-wagmi-connector";
 import { base } from "wagmi/chains";
 import { useTransactions } from '../../hooks/useTransactions';
-import { sdk } from '@farcaster/miniapp-sdk';
 
 interface MintButtonProps {
   onSuccess: () => void;
@@ -35,7 +32,6 @@ function isUserRejectionError(error: any): boolean {
 export function MintButton({ onSuccess, onError, currentScore }: MintButtonProps) {
   const { isConnected, address, chainId } = useAccount();
   const { switchChain } = useSwitchChain();
-  const { connect } = useConnect();
 
   const [isLoadingTxData, setIsLoadingTxData] = useState(false);
   const [userRejected, setUserRejected] = useState(false);
@@ -126,7 +122,6 @@ export function MintButton({ onSuccess, onError, currentScore }: MintButtonProps
       setChainMismatch(false);
 
       if (!isConnected || !address) {
-        connect({ connector: farcasterMiniApp() });
         return;
       }
 
@@ -194,10 +189,7 @@ export function MintButton({ onSuccess, onError, currentScore }: MintButtonProps
         }`}
         onClick={
           writeHash && wasMinted && isConnected
-            ? () =>
-                sdk.actions.openUrl(
-                  `https://basescan.org/tx/${writeHash}`
-                )
+            ? () => window.open(`https://basescan.org/tx/${writeHash}`, '_blank')
             : handleMint
         }
         disabled={isPending || currentScore < MIN_SCORE_REQUIRED}

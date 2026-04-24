@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import { Transaction, TransactionsTableProps } from '../../types.ts';
-import { sdk } from '@farcaster/miniapp-sdk';
 import './TransactionsTable.css';
 
 const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions, clearTransactions }) => {
@@ -72,16 +71,16 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions, cle
                     tx.userAddress ? (
                       <span>Congrats, you <a href={"#"} onClick={(evt) => {
                         evt.preventDefault();
-                        sdk.actions.openUrl(tx.link)
+                        window.open(tx.link, '_blank')
                       }}>minted</a> 1 <a target="_blank" rel="noopener noreferrer" href={`#`} onClick={(evt) => {
                         evt.preventDefault();
-                        sdk.actions.openUrl(`https://magiceden.io/u/${tx.userAddress}?activeTab=%22allItems%22&chains=%5B%22base%22%5D&wallets=%5B%22${tx.userAddress}%22%5D`)
+                        window.open(`https://magiceden.io/u/${tx.userAddress}?activeTab=%22allItems%22&chains=%5B%22base%22%5D&wallets=%5B%22${tx.userAddress}%22%5D`, '_blank')
                       }}>Jesse NFT</a> </span>
                      
                     ) : (
                       <a href={"#"} onClick={(evt) => {
                         evt.preventDefault();
-                        sdk.actions.openUrl(tx.link)
+                        window.open(tx.link, '_blank')
                       }}>
                         {tx.link?.length > 60 ? tx.link?.slice(8, 45) + "..." : tx.link}
                       </a>
