@@ -866,8 +866,10 @@ const Game = () => {
       }
     };
   
+    let isLoopActive = true;
+
     const gameLoop = () => {
-      if (!playerTank.current) return;
+      if (!playerTank.current || !isLoopActive) return;
   
       ctx.clearRect(0, 0, CONFIG.CANVAS_WIDTH, CONFIG.CANVAS_HEIGHT);
       ctx.fillStyle = '#9dc2fa';
@@ -920,6 +922,7 @@ const Game = () => {
     gameLoop();
   
     return () => {
+      isLoopActive = false;
       if (!isMobileDevice()) {
         window.removeEventListener('keydown', (e) => keyHandler(e, true));
         window.removeEventListener('keyup', (e) => keyHandler(e, false));
@@ -931,7 +934,8 @@ const Game = () => {
   }, [gameState, isMobileDevice()]);
 
   const handleLogin = () => {
-    const connector = connectors[0];
+    const connector =
+      connectors.find((c) => c.id === 'injected') ?? connectors[0];
     if (connector) {
       connect({ connector });
     }

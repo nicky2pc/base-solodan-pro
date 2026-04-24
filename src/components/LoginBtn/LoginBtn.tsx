@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { useAccount, useDisconnect, useConnect, useBalance as useWagmiBalance } from 'wagmi';
 
 export default function LoginBtn() {
-  const { isConnected, address } = useAccount();
+  const { isConnected, address, isConnecting, isReconnecting } = useAccount();
   const { disconnect } = useDisconnect();
-  const { connect, connectors, isPending } = useConnect();
+  const { connect, connectors, isPending, variables } = useConnect();
   const { data: balance, refetch: refetchBalance } = useWagmiBalance({
     address,
     chainId: 8453,
@@ -32,18 +32,22 @@ export default function LoginBtn() {
     );
   }
 
+  // prefer injected (Base App native wallet), fallback to first available
+  const primaryConnector =
+    connectors.find((c) => c.id === 'injected') ?? connectors[0];
+
+  const isThisConnectorPending =
+    isPending && variables?.connector?.id === primaryConnector?.id;
+
+  const isLoading = isConnecting || isReconnecting || isThisConnectorPending;
+
   return (
-    <>
-      {connectors.map((connector) => (
-        <button
-          key={connector.uid}
-          className='login-btn'
-          onClick={() => connect({ connector })}
-          disabled={isPending}
-        >
-          {isPending ? 'Connecting...' : 'Login'}
-        </button>
-      ))}
-    </>
+    <button
+      className='login-btn'
+      onClick={() => primaryConnector && connect({ connector: primaryConnector })}
+      disabled={isLoading}
+    >
+      {isLoading ? 'Connecting...' : 'Login'}
+    </button>
   );
 }
