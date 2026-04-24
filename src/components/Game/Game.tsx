@@ -33,6 +33,7 @@ const Game = () => {
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameContainerRef = useRef<HTMLDivElement>(null);
+  const joystickInitialized = useRef<boolean>(false);
   const explosions = useRef<{ x: number; y: number; frame: number, width: number, height: number }[]>([]);
   const enemies = useRef<Enemy[]>([]);
   const playerTank = useRef<Mondalak | null>(null);
@@ -107,8 +108,16 @@ const Game = () => {
     return 1; // Default scale if not transformed
   };
 
-  // currentBodyScale intentionally not updated on resize — resize events
-  // from browser toolbar show/hide caused unnecessary re-renders during gameplay
+  // Scale the game container once at mount to fit any screen width
+  useEffect(() => {
+    if (!gameContainerRef.current) return;
+    const scale = Math.min(window.innerWidth / 800, 1);
+    if (scale < 1) {
+      gameContainerRef.current.style.transformOrigin = 'top left';
+      gameContainerRef.current.style.transform = `scale(${scale})`;
+      gameContainerRef.current.style.width = `${100 / scale}%`;
+    }
+  }, []);
 
   // Apply body scaling override when in simulated fullscreen
   useEffect(() => {
@@ -228,13 +237,14 @@ const Game = () => {
   }, []);
 
   useEffect(() => {
-    if (isMobileDevice() && gameState === 'playing') {
-      cleanupJoystickElements();
+    if (isMobileDevice() && gameState === 'playing' && !joystickInitialized.current) {
+      joystickInitialized.current = true;
       initJoystick();
     }
-    return () => {
+    if (gameState !== 'playing') {
+      joystickInitialized.current = false;
       cleanupJoystickElements();
-    };
+    }
   }, [gameState]);
   
 

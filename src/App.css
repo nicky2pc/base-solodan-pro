@@ -62,7 +62,6 @@ canvas {
   position: relative;
   top: 20px;
   background: var(--base-blue-100);
-  transition: .3s all ease;
   overflow: hidden;
   border-radius: 8px;
   max-width: 100%;
