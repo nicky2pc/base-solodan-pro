@@ -41,7 +41,6 @@ html, body {
 }
 
 body {
-  transform-origin: top left;
   overflow-x: hidden;
   position: relative;
   font-family: 'Space Mono', 'Courier New', monospace;
@@ -52,42 +51,6 @@ body {
 #privy-dialog > div {
   width: 100%;
   height: 100%;
-}
-
-#privy-dialog [data-headlessui-state="open"] > div {
-  transform: scale(0.99);
-}
-
-@media (max-height: 1199px) {
-  body {
-    transform: scale(0.8);
-    width: 125%;
-    height: 125%;
-  }
-}
-
-@media (max-height: 900px) {
-  body {
-    transform: scale(0.7);
-    width: 143%;
-    height: 143%;
-  }
-}
-
-@media (max-height: 800px) {
-  body {
-    transform: scale(0.6);
-    width: 167%;
-    height: 167%;
-  }
-}
-
-@media (max-height: 700px) {
-  body {
-    transform: scale(0.5);
-    width: 200%;
-    height: 200%;
-  }
 }
 
 *:not(.transactions) {

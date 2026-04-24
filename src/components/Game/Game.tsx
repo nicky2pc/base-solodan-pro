@@ -176,75 +176,23 @@ const Game = () => {
   }, [simulatedFullscreen]);
 
   const cleanupJoystickElements = () => {
-    // First try to clean via the manager if it exists
     if (managerRef.current) {
       try {
-        console.log('Destroying joystick via manager');
         managerRef.current.destroy();
         managerRef.current = null;
-      } catch (e) {
-        console.error('Error destroying joystick via manager:', e);
-      }
+      } catch (e) {}
     }
-    
-    // Then do a DOM-level cleanup to be extra thorough
-    const nippleElements = document.getElementsByClassName('nipple');
-    console.log(`Found ${nippleElements.length} nipple elements in DOM`);
-    
-    // Convert to array to avoid live collection issues when removing elements
-    const elementsToRemove = Array.from(nippleElements);
-    elementsToRemove.forEach((el, index) => {
-      console.log(`Removing nipple element ${index + 1}/${elementsToRemove.length}`);
-      if (el.parentNode) {
-        el.parentNode.removeChild(el);
-      }
+    Array.from(document.getElementsByClassName('nipple')).forEach(el => {
+      el.parentNode?.removeChild(el);
     });
-    
-    // Look for any other joystick-related elements that might be hanging around
-    const possibleJoystickClasses = ['front', 'back', 'collection', 'nipple'];
-    possibleJoystickClasses.forEach(className => {
-      const elements = document.getElementsByClassName(className);
-      if (elements.length > 0) {
-        console.log(`Found ${elements.length} additional '${className}' elements`);
-        Array.from(elements).forEach(el => {
-          if (el.classList.contains('nipple') || el.parentElement?.classList.contains('nipple')) {
-            if (el.parentNode) {
-              el.parentNode.removeChild(el);
-            }
-          }
-        });
-      }
-    });
-    
-    // Verify cleanup was successful
-    const remainingElements = document.getElementsByClassName('nipple');
-    if (remainingElements.length > 0) {
-      console.warn(`Still found ${remainingElements.length} nipple elements after cleanup`);
-    } else {
-      console.log('Joystick cleanup successful, no elements remaining');
-    }
   };
 
   const initJoystick = () => {
-    // Clean up any existing joystick elements first
     cleanupJoystickElements();
-
-    // Wait a moment to ensure DOM is ready
     setTimeout(() => {
       const zone = document.getElementById('zone');
-      if (!zone) {
-        console.warn('Zone element not found for joystick');
-        return;
-      }
-
-      console.log('Initializing joystick, fullscreen:', isFullscreen);
+      if (!zone) return;
       try {
-        // Check one more time before creating to ensure no elements exist
-        const existingElements = document.getElementsByClassName('nipple');
-        if (existingElements.length > 0) {
-          console.warn(`Found ${existingElements.length} nipple elements right before creation, cleaning again`);
-          cleanupJoystickElements();
-        }
         
         managerRef.current = nipplejs.create({
           zone,
@@ -266,15 +214,7 @@ const Game = () => {
         managerRef.current.on('end', () => {
           joystickDirection.current = { angle: 0, force: 0 };
         });
-        
-        // Verify only one joystick exists
-        const joystickElements = document.getElementsByClassName('nipple');
-        console.log(`After creation, found ${joystickElements.length} joystick elements`);
-        
-        console.log('Joystick successfully initialized');
-      } catch (e) {
-        console.error('Error initializing joystick:', e);
-      }
+      } catch (e) {}
     }, 250); // Slightly longer delay
   };
 
@@ -287,31 +227,16 @@ const Game = () => {
     };
   }, []);
 
-  // Handle joystick initialization/reinitialization when fullscreen changes
   useEffect(() => {
-    // Only initialize joystick if in mobile and game is playing
     if (isMobileDevice() && gameState === 'playing') {
-      console.log('Fullscreen changed, reinitializing joystick');
       cleanupJoystickElements();
       initJoystick();
     }
-    
     return () => {
       cleanupJoystickElements();
     };
-  }, [isFullscreen, gameState]);
-  
-  // Clean old joysticks when game state changes
-  useEffect(() => {
-    if (gameState !== 'playing') {
-      console.log('Game state changed, cleaning up joystick');
-      cleanupJoystickElements();
-    } else if (gameState === 'playing' && isMobileDevice()) {
-      console.log('Game state changed to playing, initializing joystick');
-      cleanupJoystickElements();
-      initJoystick();
-    }
   }, [gameState]);
+  
 
   type ImageCache = {
     enemies: {
