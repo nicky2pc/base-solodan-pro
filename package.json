@@ -3,14 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@farcaster/auth-client": "^0.3.0",
-    "@farcaster/auth-kit": "^0.7.0",
-    "@farcaster/frame-node": "^0.0.22",
-    "@farcaster/frame-sdk": "latest",
-    "@farcaster/frame-wagmi-connector": "latest",
-    "@farcaster/miniapp-sdk": "^0.2.1",
-    "@farcaster/miniapp-wagmi-connector": "latest",
-    "@privy-io/react-auth": "^2.6.0",
+    "@base-org/account": "latest",
     "@tanstack/react-query": "^5.45.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -24,8 +17,8 @@
     "react-dom": "^18.3.1",
     "uuid": "^13.0.0",
     "vconsole": "^3.15.1",
-    "viem": "latest",
-    "wagmi": "latest",
+    "viem": "^2.44.1",
+    "wagmi": "^3.3.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
