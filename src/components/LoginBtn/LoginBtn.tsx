@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useAccount, useDisconnect, useConnect, useBalance as useWagmiBalance } from 'wagmi';
 
 export default function LoginBtn() {
-  const { isConnected, address, isConnecting, isReconnecting } = useAccount();
+  const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
   const { connect, connectors, isPending, variables } = useConnect();
   const { data: balance, refetch: refetchBalance } = useWagmiBalance({
@@ -39,15 +39,13 @@ export default function LoginBtn() {
   const isThisConnectorPending =
     isPending && variables?.connector?.id === primaryConnector?.id;
 
-  const isLoading = isConnecting || isReconnecting || isThisConnectorPending;
-
   return (
     <button
       className='login-btn'
       onClick={() => primaryConnector && connect({ connector: primaryConnector })}
-      disabled={isLoading}
+      disabled={isThisConnectorPending}
     >
-      {isLoading ? 'Connecting...' : 'Login'}
+      {isThisConnectorPending ? 'Connecting...' : 'Login'}
     </button>
   );
 }
