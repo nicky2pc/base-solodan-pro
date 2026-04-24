@@ -92,7 +92,6 @@ button {
   color: #ffffff;
   cursor: pointer;
   text-decoration: none;
-  transition: all 0.3s ease;
   font-weight: 700;
   font-family: 'Orbitron', sans-serif;
   box-shadow: 0 3px 10px rgba(0, 0, 245, 0.18);
@@ -106,7 +105,7 @@ button {
   border: 1px solid var(--base-blue);
   color: #f7f9ff;
   cursor: pointer;
-  transition: .3s all ease;
+  
 }
 
 .play-btn-guest {
@@ -295,7 +294,7 @@ p {
   border: 1px solid var(--base-blue);
   border-radius: 32px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  
   font-weight: 600;
   box-shadow: 0 4px 12px rgba(0, 0, 245, 0.2);
 }
@@ -327,7 +326,7 @@ p {
   border: 1px solid var(--base-blue);
   border-radius: 32px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  
   box-shadow: 0 4px 12px rgba(0, 0, 245, 0.2);
 }
 
@@ -341,7 +340,7 @@ p {
   color: var(--base-ink);
   border-radius: 32px;
   border: 1px solid rgba(0, 0, 245, 0.2);
-  transition: all 0.3s ease;
+  
 }
 
 .balance-container p {
@@ -373,7 +372,7 @@ button:disabled {
   gap: 5px;
   align-items: center;
   border: 1px solid var(--base-blue);
-  transition: all 0.3s ease;
+  
   box-shadow: 0 4px 12px rgba(0, 0, 245, 0.2);
 }
 
@@ -407,7 +406,7 @@ button:disabled {
   color: var(--base-ink);
   border: 1px solid rgba(0, 0, 245, 0.3);
   border-radius: 32px;
-  transition: all 0.3s ease;
+  
   font-weight: 500;
 }
 

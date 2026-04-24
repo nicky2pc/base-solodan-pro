@@ -56,7 +56,7 @@ const Game = () => {
   const shootingRef = useRef<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [simulatedFullscreen, setSimulatedFullscreen] = useState(false);
-  const [currentBodyScale, setCurrentBodyScale] = useState(1);
+  const gameScale = Math.min(window.innerWidth / 800, 1);
   const [showCharSelect, setShowCharSelect] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState<'basic' | 'premium'>('basic');
 
@@ -93,31 +93,6 @@ const Game = () => {
     );
   };
 
-  // Get the current scale applied to the body through CSS media queries
-  const detectBodyScale = () => {
-    const computedStyle = window.getComputedStyle(document.body);
-    const transform = computedStyle.transform || computedStyle.webkitTransform;
-    if (transform !== 'none') {
-      const matrix = transform.match(/matrix\(([^)]+)\)/);
-      if (matrix) {
-        const values = matrix[1].split(',');
-        // Scale factor is in position 0 of the matrix
-        return parseFloat(values[0]);
-      }
-    }
-    return 1; // Default scale if not transformed
-  };
-
-  // Scale the game container once at mount to fit any screen width
-  useEffect(() => {
-    if (!gameContainerRef.current) return;
-    const scale = Math.min(window.innerWidth / 800, 1);
-    if (scale < 1) {
-      gameContainerRef.current.style.transformOrigin = 'top left';
-      gameContainerRef.current.style.transform = `scale(${scale})`;
-      gameContainerRef.current.style.width = `${100 / scale}%`;
-    }
-  }, []);
 
   // Apply body scaling override when in simulated fullscreen
   useEffect(() => {
@@ -893,9 +868,14 @@ const Game = () => {
 
   return (
     <>
-    <div 
-      ref={gameContainerRef} 
+    <div
+      ref={gameContainerRef}
       className={`game-container`}
+      style={gameScale < 1 ? {
+        transformOrigin: 'top left',
+        transform: `scale(${gameScale})`,
+        width: `${100 / gameScale}%`,
+      } : undefined}
     >
       <div style={{
         position: 'relative',
