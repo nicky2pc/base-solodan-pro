@@ -1,13 +1,17 @@
 import * as React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { farcasterMiniApp } from "@farcaster/miniapp-wagmi-connector";
 import { createConfig, http, WagmiProvider } from "wagmi";
 import { base } from "wagmi/chains";
+import { baseAccount, injected } from "wagmi/connectors";
 
 export const config = createConfig({
   chains: [base],
-  syncConnectedChain: false,
-  connectors: [farcasterMiniApp()],
+  connectors: [
+    injected(),
+    baseAccount({
+      appName: "Mondalak",
+    }),
+  ],
   transports: {
     [base.id]: http(),
   },
@@ -15,7 +19,7 @@ export const config = createConfig({
 
 const queryClient = new QueryClient();
 
-export default function FrameWalletProvider({
+export default function WalletProvider({
   children,
 }: {
   children: React.ReactNode;
