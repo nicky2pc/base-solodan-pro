@@ -17,11 +17,8 @@ import LoginBtn from '../LoginBtn/LoginBtn.tsx';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import nipplejs, { JoystickManager, EventData, JoystickOutputData } from 'nipplejs';
 import { useMintPopup } from '../../hooks/useMintPopup.ts';
-import farcasterMiniApp from '@farcaster/miniapp-wagmi-connector';
 import MintPopup from '../MintPopup/MintPopup.tsx';
 import VConsole from 'vconsole';
-import { sdk } from '@farcaster/miniapp-sdk';
-import { useFrame } from '../../providers/FarcasterProvider.tsx';
 import { isMobile } from 'react-device-detect';
 import LeaderboardPopup from '../LeaderboardPopup/LeaderboardPopup.tsx';
 import { CharacterSelect } from '../CharacterSelect/CharacterSelect.tsx';
@@ -32,8 +29,7 @@ import { CharacterSelect } from '../CharacterSelect/CharacterSelect.tsx';
 //new VConsole();
 const Game = () => {
   const {isConnected} = useAccount();
-  const {connect} = useConnect();
-  const { isSDKLoaded, isEthProviderAvailable, context, actions } = useFrame();
+  const { connect, connectors } = useConnect();
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameContainerRef = useRef<HTMLDivElement>(null);
@@ -73,7 +69,6 @@ const Game = () => {
   const [countdownValue, setCountdownValue] = useState<number>(3);
   const [buffTimerValue, setBuffTimerValue] = useState<number>(0);
   const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(true);
-  const [warpcastShareLoading, setWarpcastShareLoading] = useState(false);
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
   const [gameStat, setGameStat] = useState({
     totalScore: 0,
@@ -296,20 +291,8 @@ const Game = () => {
   };
 
   useEffect(() => {
-    const init = async () => {
-      sdk.actions.ready();
-      console.log('SDK ready');
-      if (isMobileDevice()) {
-        // Initial joystick setup - no need to call initJoystick() here
-        // We'll handle it in the fullscreen effect below
-      }
-    };
-  
-    init();
-  
     return () => {
       if (managerRef.current) {
-        console.log('Destroying nipplejs on component unmount');
         managerRef.current.destroy();
         managerRef.current = null;
       }
@@ -947,25 +930,10 @@ const Game = () => {
     };
   }, [gameState, isMobileDevice()]);
 
-  const handleLogin = async () => {
-    try {
-  
-      if (!isSDKLoaded || !isEthProviderAvailable || !context) {
-        console.warn('SDK not ready or no eth provider');
-        return;
-      }
-  
-      const provider = sdk.wallet.ethProvider;
-  
-      const accounts = await provider.request({ method: 'eth_requestAccounts' });
-      console.log('[🔑] User accounts:', accounts);
-  
-      await connect({
-        connector: farcasterMiniApp(),
-      });
-  
-    } catch (err) {
-      console.error('🧨 Login error:', err);
+  const handleLogin = () => {
+    const connector = connectors[0];
+    if (connector) {
+      connect({ connector });
     }
   };
   
@@ -987,20 +955,6 @@ const Game = () => {
     }
   };
   
-  if (!isEthProviderAvailable && false) {
-   return (
-     <div className="bg-mobile bg">
-       <div className="mobile-warning">
-         <h2>Browser is not supported</h2>
-         <p>Launch this game on Warpcast to play.</p>
-         <a className="warpcast-button" href="https://warpcast.com/miniapps/ywWY5OuZbl_0/monagayanimals" target="_blank" style={{  backgroundColor: '#472A91', color: 'white', display: 'flex', width: '300px', fontWeight: '500', marginTop: '10px', fontSize: '16px', alignItems: 'center', justifyContent: 'center', gap: '5px' }}
-                 >
-                   Play
-                   </a>
-       </div>
-     </div>
-   )
-  }
 
 
   return (
@@ -1135,7 +1089,7 @@ const Game = () => {
                 flexDirection: "column"
               }} className="flex-wrapper">
                 {!isConnected && (
-                    <button className='ui-login-btn' style={{minWidth: "240px"}} onClick={handleLogin} disabled={!isEthProviderAvailable}>
+                    <button className='ui-login-btn' style={{minWidth: "240px"}} onClick={handleLogin} disabled={false}>
                       Start / Login
                     </button>
                  )}  
@@ -1227,7 +1181,7 @@ const Game = () => {
                 gap: "10px",
               }} className="flex-wrapper">
                 {!isConnected && (
-                    <button className='ui-login-btn' onClick={handleLogin} disabled={!isEthProviderAvailable}>
+                    <button className='ui-login-btn' onClick={handleLogin} disabled={false}>
                       Start / Login
                     </button>
                  )}  
@@ -1244,54 +1198,11 @@ const Game = () => {
                       const encodedUrl = encodeURIComponent(url);
                       const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
 
-                      await sdk.actions.openUrl(twitterUrl);
+                      window.open(twitterUrl, '_blank');
                     }}
                     style={{ marginLeft: '10px auto 0', width: '310px', backgroundColor: '#000000', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}
                   >
                     Share results on <img src="/x.jpg" alt="X logo" style={{ height: '20px', width: 'auto' }} />
-                  </button>
-                  <button
-                    onClick={async () => {
-                      const text = getShareText();
-                      const url = "https://base-solodan-pro.vercel.app";
-
-                      try {
-                        await sdk.actions.composeCast({
-                          text: text,
-                          embeds: [url]
-                        });
-                      } catch (error) {
-                        console.error("Compose cast failed:", error);
-                        // можно добавить fallback на warpcast url если очень хочется
-                      }
-                    }}
-                    style={{
-                      marginTop: '10px',
-                      width: '310px',
-                      height: '44px',           // ← делаем высоту как у первой кнопки
-                      backgroundColor: '#000000',
-                      color: 'white',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '8px',
-                      border: 'none',
-                      borderRadius: '8px',      // ← был 32px → делаем более похожим на первую
-                      fontSize: '1em',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-1px)';
-                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(255,255,255,0.08)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = 'none';
-                    }}
-                  >
-                    Share on Base 🟦
                   </button>
 
               </div>
