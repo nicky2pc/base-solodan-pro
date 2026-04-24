@@ -1,15 +1,16 @@
 import React from 'react';
 import { ProvidersProps } from '../types.ts';
 import { FrameMultiplierProvider } from './FrameMultiplierProvider.tsx';
-import { FrameProvider } from './FarcasterProvider.tsx';
+import WalletProvider from './FrameWalletProvider.tsx';
+
 export const Providers: React.FC<ProvidersProps> = ({ children }) => {
   return (
-      <FrameProvider>
-        <FrameMultiplierProvider>
-          {children}
-        </FrameMultiplierProvider>
-      </FrameProvider>
+    <WalletProvider>
+      <FrameMultiplierProvider>
+        {children}
+      </FrameMultiplierProvider>
+    </WalletProvider>
   );
 };
 
-export default Providers; 
+export default Providers;
