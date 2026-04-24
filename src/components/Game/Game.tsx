@@ -107,20 +107,8 @@ const Game = () => {
     return 1; // Default scale if not transformed
   };
 
-  // Update scale value when window resizes
-  useEffect(() => {
-    const updateBodyScale = () => {
-      const scale = detectBodyScale();
-      setCurrentBodyScale(scale);
-    };
-
-    updateBodyScale(); // Initial detection
-    window.addEventListener('resize', updateBodyScale);
-    
-    return () => {
-      window.removeEventListener('resize', updateBodyScale);
-    };
-  }, []);
+  // currentBodyScale intentionally not updated on resize — resize events
+  // from browser toolbar show/hide caused unnecessary re-renders during gameplay
 
   // Apply body scaling override when in simulated fullscreen
   useEffect(() => {
@@ -261,9 +249,9 @@ const Game = () => {
         managerRef.current = nipplejs.create({
           zone,
           mode: 'static',
-          position: { left: '0%', top: '0%' },
+          position: { left: '50%', top: '50%' },
           color: '#7663e0',
-          size: 200,
+          size: 160,
         });
 
         managerRef.current.on('move', (evt: EventData, data: JoystickOutputData) => {

@@ -44,7 +44,7 @@ body:has(.mint-popup-overlay.open) {
 
 .mint-popup-content {
   padding: 24px;
-  padding-bottom: calc(env(safe-area-inset-bottom, 34px) + 88px);
+  padding-bottom: calc(env(safe-area-inset-bottom, 34px) + 130px);
   gap: 8px;
   display: flex;
   flex-direction: column;
@@ -162,7 +162,7 @@ body:has(.mint-popup-overlay.open) {
 @media (max-width: 480px) {
 
   .mint-popup-content {
-    padding-bottom: calc(env(safe-area-inset-bottom, 34px) + 88px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 34px) + 130px);
   }
   .token-image {
     width: 160px;
