@@ -44,7 +44,7 @@ body:has(.mint-popup-overlay.open) {
 
 .mint-popup-content {
   padding: 24px;
-  padding-bottom: calc(24px + env(safe-area-inset-bottom, 20px));
+  padding-bottom: calc(env(safe-area-inset-bottom, 34px) + 88px);
   gap: 8px;
   display: flex;
   flex-direction: column;
@@ -53,8 +53,8 @@ body:has(.mint-popup-overlay.open) {
 }
 
 .token-image {
-    width: 300px;
-    height: 300px;
+  width: 200px;
+  height: 200px;
   object-fit: contain;
   border-radius: 8px;
 }
@@ -162,11 +162,11 @@ body:has(.mint-popup-overlay.open) {
 @media (max-width: 480px) {
 
   .mint-popup-content {
-    padding-bottom: calc(30px + env(safe-area-inset-bottom, 20px));
+    padding-bottom: calc(env(safe-area-inset-bottom, 34px) + 88px);
   }
   .token-image {
-    width: 300px;
-    height: 300px;
+    width: 160px;
+    height: 160px;
   }
   
   .mint-text h2 {

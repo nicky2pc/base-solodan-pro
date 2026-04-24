@@ -867,9 +867,17 @@ const Game = () => {
     };
   
     let isLoopActive = true;
+    let lastFrameTime = 0;
+    const FRAME_INTERVAL = 1000 / 60;
 
-    const gameLoop = () => {
+    const gameLoop = (timestamp: number = 0) => {
       if (!playerTank.current || !isLoopActive) return;
+
+      requestAnimationFrame(gameLoop);
+
+      const elapsed = timestamp - lastFrameTime;
+      if (elapsed < FRAME_INTERVAL) return;
+      lastFrameTime = timestamp;
   
       ctx.clearRect(0, 0, CONFIG.CANVAS_WIDTH, CONFIG.CANVAS_HEIGHT);
       ctx.fillStyle = '#9dc2fa';
@@ -907,9 +915,8 @@ const Game = () => {
         explosion.frame += Math.ceil(frameMultiplier);
       });
   
-      requestAnimationFrame(gameLoop);
     };
-  
+
     // Add event listeners for desktop controls
     if (!isMobileDevice()) {
       window.addEventListener('keydown', (e) => keyHandler(e, true));
@@ -919,8 +926,8 @@ const Game = () => {
       canvasRef.current.addEventListener('mouseup', () => (mouse.shooting = false));
     }
   
-    gameLoop();
-  
+    requestAnimationFrame(gameLoop);
+
     return () => {
       isLoopActive = false;
       if (!isMobileDevice()) {
